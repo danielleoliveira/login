@@ -17,4 +17,4 @@ Um forte abraço do seu amigo Bruno Santos.
 
 ####Link para documentação:
 ---------------------------------------------------------------------
-[https://www.hxphp.com.br/documentacao/](https://www.hxphp.com.br/documentacao/).
+[https://www.hxphp.com.br/documentacao/](https://www.hxphp.com.br/documentacao/).# login
