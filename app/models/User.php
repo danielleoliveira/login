@@ -30,7 +30,7 @@ class User extends \HXPHP\System\Model
 
 	public static function cadastrar(array $post)
 	{
-callback = new \stdClass;
+		$callbackObj = new \stdClass;
 		$callbackObj->user = null;
 		$callbackObj->status = false;
 		$callbackObj->errors = array();
@@ -42,14 +42,14 @@ callback = new \stdClass;
 			return $callbackObj;
 		}
 
-		$user_data = array(
+		$post = array_merge($post, array(
 			'role_id' => $role->id,
 			'status' => 1
-		);
+		));
 
 		$password = \HXPHP\System\Tools::hashHX($post['password']);
 
-		$post = array_merge($post, $user_data, $password);
+		$post = array_merge($post, $password);
 
 		$cadastrar = self::create($post);
 
