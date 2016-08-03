@@ -42,7 +42,7 @@ class CadastroController extends \HXPHP\System\Controller
 			}
 			else
 			{
-
+				$this->auth->login($cadastrarUsuario->user->id, $cadastrarUsuario->user->username); 
 			}
 		}
 	}
