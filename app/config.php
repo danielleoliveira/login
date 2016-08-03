@@ -4,13 +4,15 @@
 
 	$configs->env->add('development');
 
-	$configs->env->development->baseURI = '/sistema/';
+	$configs->env->development->baseURI = '/login/';
 
 	$configs->env->development->database->setConnectionData(array(
+		'driver' => 'mysql',
 		'host' => 'localhost',
 		'user' => 'root',
-		'password' => '',
-		'dbname' => 'sistemahx'
+		'password' => 'vertrigo',
+		'dbname' => 'sistemalogin',
+		'charset' => 'utf8'
 	));
 
 	return $configs;
