@@ -15,4 +15,7 @@
 		'charset' => 'utf8'
 	));
 
+	//linha para redirecionar o usuário após logar, ou não
+	$configs->env->development->auth->setUrls('/login/home', '/login/login');
+
 	return $configs;
