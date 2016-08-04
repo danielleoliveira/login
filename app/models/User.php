@@ -82,12 +82,13 @@ class User extends \HXPHP\System\Model
 			//criando um parâmetro para comparação
 			$password = \HXPHP\System\Tools::hashHX($post['password'], $user->salt);
 
-			if(loginAttempt::existemTentativas)
+			if(loginAttempt::existemTentativas($user->id))
 			{
 				//comparando a senha digitada com a senha armazenada
 				//se logar limpa as tentativas, senão adiciona mais uma tentativa
-				if ($password['password'] == $user->password)
+				if ($password['password'] === $user->password)
 				{
+					var_dump('logado');
 					LoginAttempt::limparTentativas($user->id);
 				}
 				else

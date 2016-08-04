@@ -20,7 +20,7 @@ class LoginController extends \HXPHP\System\Controller
 		//true é publica, false é privada
 		$this->auth->redirectCheck(true);
 	}
-	
+
 	public function logarAction()
 	{
 		//aproveitando a index
@@ -30,7 +30,7 @@ class LoginController extends \HXPHP\System\Controller
 
 		if(!empty($post))
 		{
-
+			User::login($post);
 		}
 	}
 }
