@@ -74,6 +74,11 @@ class User extends \HXPHP\System\Model
 
 	public static function login(array $post)
 	{
+		$callbackObj = new \stdClass;
+		$callbackObj->user = null;
+		$callbackObj->status = false;
+		//Code: Variável para exibir erro do plugin Auth.json no Controller 
+		$callbackObj->code = null;
 		//verificar se o usuário existe
 		$user = self::find_by_username($post['username']);
 
@@ -91,22 +96,46 @@ class User extends \HXPHP\System\Model
 					//se logar limpa as tentativas, senão adiciona mais uma tentativa
 					if ($password['password'] == $user->password)
 					{
-						var_dump('logado');
+						//alterando o callback já que o usuário está logado 
+						$callbackObj->user = $user;
+						$callbackObj->status = true;
+
+
 						LoginAttempt::limparTentativas($user->id);
 					}
 					else
 					{
+						//mensagem do Auth.json para quando errar a senha
+						$callbackObj->code = 'dados-incorretos';
+
 						LoginAttempt::registrarTentativa($user->id);
 					}
 				}
 				//caso estoure o número de tentativas, bloqueia o usuário, através o status
 				else
 				{
+					//mensagem do Auth.json para usuário bloqueado por tentativas
+					$callbackObj->code = 'usuário-bloqueado';
+
 					$user->status = 0;
 					//impede as validações na hora de atualizar o cadastro
 					$user->save(false);
 				}
 			}
+			else
+			{
+				//mensagem do Auth.json par dizer que o usuário foi bloqueado
+				$callbackObj->code = 'usuário-bloqueado';
+
+			}
 		}
+		else
+		{
+			//mensagem do Auth.json para dizer que o usuário não existe
+			$callbackObj->code = 'usuário-inexistente';
+
+		}
+
+		return $callbackObj;
 	}
 }
