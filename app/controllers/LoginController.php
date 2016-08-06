@@ -43,7 +43,9 @@ class LoginController extends \HXPHP\System\Controller
 				//carregando as mensagens de erro do auth.json para exibir 
 				$this->load('Modules\Messages', 'auth');
 				$this->messages->setBlock('alerts');
-				$error = $this->messages->getByCode($login->code);
+				$error = $this->messages->getByCode($login->code, array(
+					'message' => $login->tentativas_restantes
+				));
 
 				$this->load('Helpers\Alert', $error);
 			}

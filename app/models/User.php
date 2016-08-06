@@ -21,15 +21,16 @@ class User extends \HXPHP\System\Model
 		)
 	);
 
+
 	static $validates_uniqueness_of = array(
-			array(
-				'username', 
-				'message' => 'Já existe um usuário com este nome de usuário cadastrado.' 
-			),
-			array(
-				'email', 
-				'message' => 'Já existe um usuário com este e-mail cadastrado.' 
-			)
+		array(
+			'username',
+			'message' => 'Já existe um usuário com este nome de usuário cadastrado.'
+		),
+		array(
+			'email',
+			'message' => 'Já existe um usuário com este e-mail cadastrado.'
+		)
 	);
 
 	public static function cadastrar(array $post)
@@ -79,6 +80,9 @@ class User extends \HXPHP\System\Model
 		$callbackObj->status = false;
 		//Code: Variável para exibir erro do plugin Auth.json no Controller 
 		$callbackObj->code = null;
+		$callbackObj->tentativas_restantes = null;
+
+
 		//verificar se o usuário existe
 		$user = self::find_by_username($post['username']);
 
@@ -105,8 +109,18 @@ class User extends \HXPHP\System\Model
 					}
 					else
 					{
-						//mensagem do Auth.json para quando errar a senha
-						$callbackObj->code = 'dados-incorretos';
+						//se tiver faltando apenas 3 ou menos tentativas ao usuário
+						if(LoginAttempt::tentativasRestantes($user->id) <= 3)
+						{
+							//exibir a mensagem indicando que as tentativas estão esgotando e a quantidade
+							$callbackObj->code = 'tentativas-esgotando';
+							$callbackObj->tentativas_restantes = LoginAttempt::tentativasRestantes($user->id);
+						}
+						else
+						{
+							//mensagem do Auth.json para quando errar a senha
+							$callbackObj->code = 'dados-incorretos';
+						}
 
 						LoginAttempt::registrarTentativa($user->id);
 					}
@@ -115,7 +129,7 @@ class User extends \HXPHP\System\Model
 				else
 				{
 					//mensagem do Auth.json para usuário bloqueado por tentativas
-					$callbackObj->code = 'usuário-bloqueado';
+					$callbackObj->code = 'usuario-bloqueado';
 
 					$user->status = 0;
 					//impede as validações na hora de atualizar o cadastro
@@ -125,14 +139,14 @@ class User extends \HXPHP\System\Model
 			else
 			{
 				//mensagem do Auth.json par dizer que o usuário foi bloqueado
-				$callbackObj->code = 'usuário-bloqueado';
+				$callbackObj->code = 'usuario-bloqueado';
 
 			}
 		}
 		else
 		{
 			//mensagem do Auth.json para dizer que o usuário não existe
-			$callbackObj->code = 'usuário-inexistente';
+			$callbackObj->code = 'usuario-inexistente';
 
 		}
 
